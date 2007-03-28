@@ -1,0 +1,56 @@
+
+vpath %.o ./../obj
+
+F90 = @FC@ 
+IFLAGS =  -I./../include
+IFLAGS += -I./../mod
+OBJECTDIR = ./../obj
+BINDIR = ./../bin
+MODULEDIR = ./../mod
+MFLAGS = # -J$(MODULEDIR)
+CFLAGS = -O2
+
+
+OBJECTS = macdep_parallel.o 
+OBJECTS += accurate.o 
+# OBJECTS += fefit.o 
+OBJECTS += hsl_zd01_mod.o 
+OBJECTS += memory.o 
+OBJECTS += ma57_dep.o 
+OBJECTS += metis_dummy.o 
+OBJECTS += hsl_ma57.o 
+OBJECTS += ma57.o 
+OBJECTS += ma57_blas.o
+OBJECTS += sabre_mpi.o
+
+
+$(BINDIR)/sabre : sabre.f90  $(patsubst %,$(OBJECTDIR)/%,$(OBJECTS)) $(BINDIR) $(OBJECTDIR)
+	$(F90) $(CFLAGS) $(MFLAGS) $(IFLAGS) $(patsubst %,$(OBJECTDIR)/%,$(OBJECTS)) $< -o $@
+
+$(BINDIR) :
+	mkdir $(BINDIR)
+
+$(OBJECTDIR)/hsl_ma57.o : hsl_ma57.f90 $(OBJECTDIR) $(MODULEDIR) $(OBJECTDIR)/hsl_zd01_mod.o $(OBJECTDIR)/memory.o
+	$(F90) -c $(CFLAGS) $(MFLAGS) $(IFLAGS) $< -o $@
+
+# $(OBJECTDIR)/fefit.o : fefit.f90 $(OBJECTDIR) $(MODULEDIR) $(OBJECTDIR)/hsl_ma57.o
+#	$(F90) -c $(CFLAGS) $(MFLAGS) $(IFLAGS) $< -o $@
+
+
+$(OBJECTDIR)/%.o : %.f90 $(OBJECTDIR) $(MODULEDIR)
+	$(F90) -c $(CFLAGS) $(MFLAGS) $(IFLAGS) $< -o $@
+
+
+$(OBJECTDIR) :
+	mkdir $(OBJECTDIR)
+
+$(MODULEDIR) :
+	mkdir $(MODULEDIR)
+
+
+clean :
+	-rm -rf $(OBJECTDIR)
+	-rm -rf $(BINDIR)
+	-rm -rf $(MODULEDIR)
+
+
