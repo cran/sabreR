@@ -1,4 +1,14 @@
-tu            relationship of trade-union membership to social class (6 levels), number of employees (5 levels), supervisory responsibility (3 levels), age of individual at start of work event, hours worked (3 levels), work with mainly one sex (4 levels) and promotion prospects (2 levels). 
-growth        A data frame containing 153 rows and 8 columns. Snijders & Bosker, (1999)
-schiz         Severity of Schizophrenia in data from the National Institute of Mental Health (NIMH)
-drvisits     German Socio-Economic Panel (SEOP) 
+
+
+drvisits                A 2 level example of a Poisson model for the number of visits to the doctor, the data are from German Socio-Economic Panel (GSEOP).
+
+growth                  A 2 level example of a linear growth (Gaussian) model for childrens growth, the data are from a book by Snijders & Bosker (1999).
+
+schiz                   A 2 level example of an ordered response model for the severity of Schizophrenia, the data are from the National Institute of Mental Health (NIMH).
+
+tu                      A 2 level example of a binary logit model for trade union membership, the data are from the Social Change and Economic Life Initiative (SCELI).
+
+
+
+
+

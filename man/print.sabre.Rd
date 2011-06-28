@@ -7,8 +7,9 @@
 }
 \usage{
 
-\method{print}{sabre}(x, estimates = TRUE, iterations = FALSE, 
-    variables = FALSE, settings = TRUE, shm = TRUE, rem = TRUE,...) 
+
+
+\method{print}{sabre}(x, estimates = TRUE, iterations = FALSE, variables = FALSE, settings = TRUE, shm = TRUE, rem = TRUE,\dots) 
 }
 
 %- maybe also 'usage' for other objects documented here.

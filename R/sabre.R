@@ -127,9 +127,13 @@ if(!is.list(case))
 }
 
 
-         script.file<-"sabreR.sab"
-         data.file<-"sabreR.dat"
-         log.file<-"sabreR.log"
+#         script.file<-"sabreR.sab"
+#         data.file<-"sabreR.dat"
+#         log.file<-"sabreR.log"
+
+         script.file<-tempfile()
+         data.file<-tempfile()
+         log.file<-tempfile()
 
 if(ordered)
 {
@@ -138,6 +142,10 @@ if(ordered)
 else
 {
   ordered<-"no"
+}
+if(first.family=="ordered")
+{
+   ordered<-""
 }
 
 
@@ -554,7 +562,12 @@ if(!is.null(model.formula.bi))
       {
         if(exp.var.name != "case.1" && exp.var.name != "case.2"  && exp.var.name != "response" && exp.var.name != "r.variate" && !(exp.var.name %in% offset.variable.names))
           {
-            model.exp.variables<-c(model.exp.variables,exp.var.name)
+            # make sure there is no constant in an ordered response model
+            if(first.family != "ordered" || 
+               (exp.var.name != "(Intercept)" && exp.var.name != "(Intercept).1" &&  exp.var.name != "(Intercept).2"))
+            {
+                   model.exp.variables<-c(model.exp.variables,exp.var.name)
+            }
           }
       }
     model.y.variate<-"response"
@@ -1022,8 +1035,12 @@ if(!is.null(model.formula.bi))
    cat(as.character(sabre.script),file=script.file,sep="")
    # create the command
    # command.string<-paste(sabre.binary,"<",script.file)<
-   command.string<-paste(sabre.binary," -terse -input=./",script.file,sep="")	
-   system(command.string)
+   #command.string<-paste(sabre.binary," -terse -input=./",script.file,sep="")	
+   #system(command.string)
+   script.file<-as.character(script.file)
+   .Fortran("fortfunc",script.file,nchar(script.file),PACKAGE="sabreR")
+
+
 
  }
 
@@ -1136,18 +1153,20 @@ if(class(sabre.binary) == "NULL")
   attr(sabre.instance,"class")<-"sabre"
 
   # process the model
-  sabre.fit(sabre.instance,sabre.binary=sabre.binary)
+  sabre.fit(sabre.instance,sabre.binary=sabre.binary,script.file=script.file,data.file=data.file,log.file=log.file)
   #sabre.fit(sabre.instance,data,sabre.binary=sabre.binary)
   sabre.instance<-process.log(sabre.instance)
 
    # tidy up
-   command.string<-paste("rm",script.file)
+   # command.string<-paste("rm",script.file)
    # system(command.string)
-   command.string<-paste("rm",data.file)
+   # command.string<-paste("rm",data.file)
    # system(command.string)
-   command.string<-paste("rm",log.file)
+   # command.string<-paste("rm",log.file)
    # system(command.string)
-
+   unlink(script.file)
+   unlink(data.file)
+   unlink(log.file)
 
   # return the result
   return(sabre.instance)

@@ -1,130 +1,75 @@
 
+
+#print.sabre<-function(x,...)
+#{
+
+#print.sabre.impl<-function(x,
+		           #estimates = TRUE,
+                           #iterations = FALSE,
+                           #variables = FALSE,
+                           #settings = TRUE,
+                           #shm = TRUE,
+                           #rem = TRUE)
+
 print.sabre<-function(x,
-                      estimates = TRUE,
-                      # correlations = FALSE,
+		      estimates = TRUE,
                       iterations = FALSE,
                       variables = FALSE,
                       settings = TRUE,
                       shm = TRUE,
                       rem = TRUE,
                       ...)
+
   {
-
-    sabre.instance<-x    
-
+    
     # the different print methods
     print.sabre.shm.estimates<-function()
       {
         header<-c("\n","(Standard Homogenous Model)","\n")
         cat(header,sep="\n")
-        cat(sabre.instance$lfit.estimates.print.message,sep="\n")
+        cat(x$lfit.estimates.print.message,sep="\n")
       }
 
     print.sabre.rem.estimates<-function()
       {
-
-        # header<-c("\n","(Random Effects Model)","\n")
-        if(sabre.instance$fixed.effects)
-         {
-           header<-c("\n","(Fixed Effects Model)","\n")
-         }
-        else
-         {
-           header<-c("\n","(Random Effects Model)","\n")           
-         }
+        header<-c("\n","(Random Effects Model)","\n")
         cat(header,sep="\n")
-        cat(sabre.instance$fit.estimates.print.message,sep="\n")
+        cat(x$fit.estimates.print.message,sep="\n")
       }
-
-
-    #print.sabre.shm.correlations<-function()
-    #  {
-    #    if(is.null(sabre.instance$lfit.correlations.print.message))
-    #      {
-    #        cat("correlations are not available for this model\n")
-    #      }
-    #    else
-    #      {
-    #        header<-c("\n","Correlation Matrix (Standard Homogenous Model)","_____________________________________________")
-    #        cat(header,sep="\n")
-    #        cat(sabre.instance$lfit.correlations.print.message,sep="\n")
-    #      }
-    #  }
-
-    #print.sabre.rem.correlations<-function()
-    #  {
-    #    if(is.null(sabre.instance$fit.correlations.print.message))
-    #      {
-    #        cat("correlations are not available for this model\n")
-    #      }
-    #    else
-    #      {
-    #        header<-c("\n","Correlation Matrix (Random Effects Model)","________________________________________")
-    #        cat(header,sep="\n")
-    #        cat(sabre.instance$fit.correlations.print.message,sep="\n")
-    #      }
-    #  }
 
 
     print.sabre.shm.iterations<-function()
       {
         header<-c("\n","(Standard Homogenous Model)","\n")
         cat(header,sep="\n")
-        cat(sabre.instance$lfit.iterations.print.message,sep="\n")
+        cat(x$lfit.iterations.print.message,sep="\n")
       }
 
     print.sabre.rem.iterations<-function()
       {
-        # header<-c("\n","(Random Effects Model)","\n")
-        if(sabre.instance$fixed.effects)
-         {
-           header<-c("\n","(Fixed Effects Model)","\n")
-         }
-        else
-         {
-           header<-c("\n","(Random Effects Model)","\n")           
-         }
+        header<-c("\n","(Random Effects Model)","\n")
         cat(header,sep="\n")
-        cat(sabre.instance$fit.iterations.print.message,sep="\n")
+        cat(x$fit.iterations.print.message,sep="\n")
       }
 
     print.sabre.variables<-function()
       {
-        cat(sabre.instance$variables.print.message,sep="\n")
+        cat(x$variables.print.message,sep="\n")
       }
 
-    print.sabre.settings.shm<-function()
+
+    print.sabre.rem.settings<-function()
       {
-        header<-c("\n","(Standard Homogenous Model)","\n")
-        cat(header,sep="\n")
-        cat(sabre.instance$model.print.message.shm,sep="\n")
+        cat(x$model.print.message.rem,sep="\n")
       }
 
-    print.sabre.settings.rem<-function()
+    print.sabre.shm.settings<-function()
       {
-        # header<-c("\n","(Random Effects Model)","\n")
-        if(sabre.instance$fixed.effects)
-         {
-           header<-c("\n","(Fixed Effects Model)","\n")
-         }
-        else
-         {
-           header<-c("\n","(Random Effects Model)","\n")           
-         }
-        cat(header,sep="\n")
-        cat(sabre.instance$model.print.message.rem,sep="\n")
+        cat(x$model.print.message.shm,sep="\n")
       }
 
 
     # the print logic
-
-    if(settings == TRUE)
-      {
-        if(shm == TRUE)
-          {
-            print.sabre.settings.shm()
-          }
-      }
     
     if(estimates == TRUE)
       {
@@ -132,38 +77,26 @@ print.sabre<-function(x,
           {
             print.sabre.shm.estimates()
           }
+        if(rem == TRUE)
+          {
+            print.sabre.rem.estimates()        
+          }
       }
-
 
     if(settings == TRUE)
       {
+        if(shm == TRUE)
+          {
+            print.sabre.shm.settings()
+          }
         if(rem == TRUE)
           {
-            print.sabre.settings.rem()
+            print.sabre.rem.settings()        
           }
-      }
 
-    
-    if(estimates == TRUE)
-      {
-        if(rem == TRUE)
-          {
-            print.sabre.rem.estimates()
-          }
+      #  print.sabre.settings()        
       }
-
     
-    # if(correlations == TRUE)
-    #  {
-    #    if(shm == TRUE)
-    #      {
-    #        print.sabre.shm.correlations()
-    #      }
-    #    if(rem == TRUE)
-    #      {
-    #        print.sabre.rem.correlations()        
-    #      }
-    #  }
 
     if(iterations == TRUE)
       {
@@ -183,3 +116,5 @@ print.sabre<-function(x,
       }
 
   }
+#print.sabre.impl(x,...)
+#}
