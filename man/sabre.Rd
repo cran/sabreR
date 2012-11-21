@@ -30,8 +30,8 @@ sabre(model.formula.uni, model.formula.bi = NULL, model.formula.tri = NULL,
   
   \item{model.formula.tri}{Trivariate model formula}
   
-  \item{case}{List of variables which contain the case structure (one for univariate, two for
-    bivariate or three for trivariate (mandatory)}
+  \item{case}{List of variables which contain the case structure (usually one variable except for three level models)
+     (mandatory)}
   
   \item{alpha}{Value of the orthogonality constant, which is used to trigger special action during the model fitting process.
     If the orthogonality criterion (which measures the propensity of the

@@ -44,6 +44,14 @@ function(model.formula.uni,
 
 # some preprocessing
 
+# fixed effect models rely on copyrighted code - remove fixed effects from this version 
+# and reimplement it in future version using open source library
+
+if(fixed.effects)
+{
+   stop("error : fixed effects models are not available in this version of sabreR")
+}
+
 if(fixed.effects && (!is.null(model.formula.bi) || !is.null(model.formula.tri)))
 {
    stop("error : cannot have multilevel fixed effects model")
@@ -383,7 +391,7 @@ sabre.data<-function(models,case)
                   {
                     for(level in 2:number.of.models)
                       {
-                        case.var<-rbind(case.var,case.var)
+                        case.var<-rbind(case.var,data.frame(dummy.name=case[case.var.number]))
                       }
                   }
                 case.var.name<-paste("case.",case.var.number,sep="")
@@ -564,7 +572,7 @@ if(!is.null(model.formula.bi))
           {
             # make sure there is no constant in an ordered response model
             if(first.family != "ordered" || 
-               (exp.var.name != "(Intercept)" && exp.var.name != "(Intercept).1" &&  exp.var.name != "(Intercept).2"))
+               (exp.var.name != "(Intercept).1" && exp.var.name != "(Intercept).2" &&  exp.var.name != "(Intercept).3"))
             {
                    model.exp.variables<-c(model.exp.variables,exp.var.name)
             }
@@ -932,7 +940,7 @@ if(!is.null(model.formula.bi))
    #    all.exp.variables<-c(all.exp.variables,sabre.model$third.const.var)
    #  }
    # lfit and nvars
-   # okay - now they have to be in some bloody order !!!!!!
+   # okay - now they have to be in some order !!!!!!
    nvar.first.length<-NULL
    nvar.second.length<-NULL
    if(!is.null(model.formula.bi))
@@ -949,7 +957,9 @@ if(!is.null(model.formula.bi))
 	         # first nvars
         	 sabre.script<-c(sabre.script,"nvar first= ",length(search.result))
                  nvar.first.length<-length(search.result)
-                 sabre.script<-c(sabre.script,"\n")
+                 # NB - sabre cannot read nvar first = x \n nvar second = y \n 
+                 # it has to be nvar first = x second = y  (hmmmmm)
+                 # sabre.script<-c(sabre.script,"\n")
                }
           search.result<-grep("\\.2",all.exp.variables)
           for(index in search.result)
@@ -959,10 +969,15 @@ if(!is.null(model.formula.bi))
 	   if(length(search.result) > 0 && !is.null(model.formula.tri))
                {   
 	         # second nvars
-        	 sabre.script<-c(sabre.script,"nvar second= ",length(search.result))
+                 # NB - see note about nvars above 
+        	 # sabre.script<-c(sabre.script,"nvar second= ",length(search.result))
+                 sabre.script<-c(sabre.script," second= ",length(search.result))
                  nvar.second.length<-length(search.result)
-                 sabre.script<-c(sabre.script,"\n")
-               }   
+                 # NB - see note about nvars above 
+                 # sabre.script<-c(sabre.script,"\n")
+               }  
+          # NB - see note about nvars above 
+          sabre.script<-c(sabre.script,"\n") 
           search.result<-grep("\\.3",all.exp.variables)
           for(index in search.result)
             {
@@ -990,13 +1005,18 @@ if(!is.null(model.formula.bi))
    if(!is.null(nvar.first.length))
     {
       sabre.script<-c(sabre.script,"nvar first= ",nvar.first.length)
-      sabre.script<-c(sabre.script,"\n")
+      # NB - see note about nvars above
+      # sabre.script<-c(sabre.script,"\n")
     }
    if(!is.null(nvar.second.length))
     {
-      sabre.script<-c(sabre.script,"nvar second= ",nvar.second.length)
-      sabre.script<-c(sabre.script,"\n")
+      # NB - see note about nvars above
+      # sabre.script<-c(sabre.script,"nvar second= ",nvar.second.length)
+      # sabre.script<-c(sabre.script,"\n")
+      sabre.script<-c(sabre.script," second= ",nvar.second.length)
     }
+   # NB - see note about nvars above
+   sabre.script<-c(sabre.script,"\n")
 
    # fit
    # sabre.script<-c(sabre.script,"fit ")
@@ -1084,17 +1104,9 @@ if(!is.null(model.formula.bi))
 
 
 # if necessary - determine the location of the sabre executable from the package structure
+# NB - sabre executable no longer used - it is now a library
 sabre.binary<-NULL
-if(class(sabre.binary) == "NULL")
-  {
-    pac.lst<-installed.packages()
-    loc<-try(pac.lst["sabreR",2],silent=TRUE)
-    if(class(loc) == "try-error")
-      {
-        stop("cannot find a sabre executable")
-      }
-    sabre.binary<-paste(loc,"/sabreR/exec/sabre",sep="")
-  }
+
 
 
 # create the sabre model structure

@@ -18,7 +18,7 @@
       if (ierror /= 0) then
           write (outbuf,'(a,i9)') ' Error in mpi_init, ierror = ',ierror
           call wrtlin(outbuf)
-          stop
+          return 
       end if
 !
 !    Process any command line arguments

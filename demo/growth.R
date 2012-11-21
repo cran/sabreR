@@ -12,6 +12,9 @@ sabre.model.1<-sabre(proximity~1,
                      first.mass=64,
                      first.scale=0.5)
 
+# print the results
+print(sabre.model.1)
+
 # create a different model
 # the explanatory variables
 sabre.model.2<-sabre(proximity~d1+d2+d3+d4-1,
@@ -21,6 +24,7 @@ sabre.model.2<-sabre(proximity~d1+d2+d3+d4-1,
                      first.scale=0.5,
                      first.sigma=0.25)
 
-
+# print the results
+print(sabre.model.2)
 
 
